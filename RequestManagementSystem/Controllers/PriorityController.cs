@@ -27,24 +27,19 @@ namespace RequestManagementSystem.Controllers
         {
             var priorities = _mapper.Map<List<PriorityDto>>(_priorityService.GetAll());
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             return Ok(priorities);
         }
+
 
         [HttpGet("{priorityId}")]
         [ProducesResponseType(200, Type = typeof(Priority))]
         [ProducesResponseType(400)]
-        public IActionResult GetDepartment(int priorityId)
+        public IActionResult GetPriority(int priorityId)
         {
             if (!_priorityService.PriorityExists(priorityId))
                 return NotFound();
 
-            var priority = _mapper.Map<DepartmentDto>(_priorityService.GetById(priorityId));
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var priority = _mapper.Map<PriorityDto>(_priorityService.GetById(priorityId));
 
             return Ok(priority);
         }
@@ -70,9 +65,6 @@ namespace RequestManagementSystem.Controllers
                 return StatusCode(422, ModelState);
             }
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var priorityMap = _mapper.Map<Priority>(priorityCreate);
 
             if (!_priorityService.Create(priorityMap))
@@ -84,11 +76,12 @@ namespace RequestManagementSystem.Controllers
             return Ok("Successfully created");
         }
 
+
         [HttpPut("{priorityId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateDepartment(int priorityId, [FromBody] PriorityDto updatedPriority)
+        public IActionResult UpdatePriority(int priorityId, [FromBody] PriorityDto updatedPriority)
         {
             if (updatedPriority == null)
                 return BadRequest(ModelState);
@@ -98,9 +91,6 @@ namespace RequestManagementSystem.Controllers
 
             if (!_priorityService.PriorityExists(priorityId))
                 return NotFound();
-
-            if (!ModelState.IsValid)
-                return BadRequest();
 
             var priorityMap = _mapper.Map<Priority>(updatedPriority);
 
@@ -126,9 +116,6 @@ namespace RequestManagementSystem.Controllers
             }
 
             var priorityToDelete = _priorityService.GetById(priorityId);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             if (!_priorityService.Delete(priorityToDelete))
             {

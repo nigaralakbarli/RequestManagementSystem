@@ -26,29 +26,23 @@ namespace RequestManagementSystem.Controllers
         public IActionResult GetCategories()
         {
             var categories = _mapper.Map<List<CategoryDto>>(_categoryService.GetAll());
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             return Ok(categories);
         }
+
 
         [HttpGet("{categoryId}")]
         [ProducesResponseType(200, Type = typeof(Category))]
         [ProducesResponseType(400)]
         public IActionResult GetCategory(int categoryId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             if (!_categoryService.CategoryExists(categoryId))
                 return NotFound();
 
             var category = _mapper.Map<CategoryDto>(_categoryService.GetById(categoryId));
 
-
             return Ok(category);
         }
+
 
         [HttpPost]
         [ProducesResponseType(204)]
@@ -65,9 +59,6 @@ namespace RequestManagementSystem.Controllers
                 return StatusCode(422, ModelState);
             }
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var categoryMap = _mapper.Map<Category>(categoryCreate);
 
             if (!_categoryService.Create(categoryMap))
@@ -78,6 +69,7 @@ namespace RequestManagementSystem.Controllers
 
             return Ok("Successfully created");
         }
+
 
         [HttpPut("{categoryId}")]
         [ProducesResponseType(400)]
@@ -94,9 +86,6 @@ namespace RequestManagementSystem.Controllers
             if (!_categoryService.CategoryExists(categoryId))
                 return NotFound();
 
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var categoryMap = _mapper.Map<Category>(updatedCategory);
 
             if (!_categoryService.Update(categoryMap))
@@ -107,6 +96,8 @@ namespace RequestManagementSystem.Controllers
 
             return NoContent();
         }
+
+
         [HttpDelete("{categoryId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
@@ -119,9 +110,6 @@ namespace RequestManagementSystem.Controllers
             }
 
             var categoryToDelete = _categoryService.GetById(categoryId);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             if (!_categoryService.Delete(categoryToDelete))
             {

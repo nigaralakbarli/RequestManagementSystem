@@ -20,17 +20,16 @@ namespace RequestManagementSystem.Controllers
             _userService = userService;
             _mapper = mapper;
         }
+
+
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
         public IActionResult GetUsers()
         {
             var users = _mapper.Map<List<UserDto>>(_userService.GetAll());
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             return Ok(users);
         }
+
 
         [HttpGet("{userId}")]
         [ProducesResponseType(200, Type = typeof(User))]
@@ -42,15 +41,14 @@ namespace RequestManagementSystem.Controllers
 
             var user = _mapper.Map<UserDto>(_userService.GetById(userId));
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             return Ok(user);
         }
+
+
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateDepartment([FromBody] UserDto userCreate)
+        public IActionResult CreateUser([FromBody] UserDto userCreate)
         {
             if (userCreate == null)
                 return BadRequest(ModelState);
@@ -65,9 +63,6 @@ namespace RequestManagementSystem.Controllers
                 return StatusCode(422, ModelState);
             }
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var userMap = _mapper.Map<User>(userCreate);
 
             if (!_userService.Create(userMap))
@@ -77,6 +72,55 @@ namespace RequestManagementSystem.Controllers
             }
 
             return Ok("Successfully created");
+        }
+
+
+        [HttpPut("{userId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateUser(int userId, [FromBody] UserDto updatedUser)
+        {
+            if (updatedUser == null)
+                return BadRequest(ModelState);
+
+            if (userId != updatedUser.Id)
+                return BadRequest(ModelState);
+
+            if (!_userService.UserExists(userId))
+                return NotFound();
+
+            var userMap = _mapper.Map<User>(updatedUser);
+
+            if (!_userService.Update(userMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating user");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+
+        [HttpDelete("{userId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteUser(int userId)
+        {
+            if (!_userService.UserExists(userId))
+            {
+                return NotFound();
+            }
+
+            var userToDelete = _userService.GetById(userId);
+
+            if (!_userService.Delete(userToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting user");
+            }
+
+            return NoContent();
         }
     }
 }

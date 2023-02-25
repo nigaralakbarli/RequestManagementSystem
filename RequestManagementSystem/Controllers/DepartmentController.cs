@@ -27,11 +27,9 @@ namespace RequestManagementSystem.Controllers
         {
             var departments = _mapper.Map<List<DepartmentDto>>(_departmentService.GetAll());
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             return Ok(departments);
         }
+
 
         [HttpGet("{departmentId}")]
         [ProducesResponseType(200, Type = typeof(Department))]
@@ -42,9 +40,6 @@ namespace RequestManagementSystem.Controllers
                 return NotFound();
 
             var department = _mapper.Map<DepartmentDto>(_departmentService.GetById(departmentId));
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             return Ok(department);
         }
@@ -70,9 +65,6 @@ namespace RequestManagementSystem.Controllers
                 return StatusCode(422, ModelState);
             }
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var departmentMap = _mapper.Map<Department>(departmentCreate);
 
             if (!_departmentService.Create(departmentMap))
@@ -83,6 +75,7 @@ namespace RequestManagementSystem.Controllers
 
             return Ok("Successfully created");
         }
+
 
         [HttpPut("{departmentId}")]
         [ProducesResponseType(400)]
@@ -98,9 +91,6 @@ namespace RequestManagementSystem.Controllers
 
             if (!_departmentService.DepartmentExists(departmentId))
                 return NotFound();
-
-            if (!ModelState.IsValid)
-                return BadRequest();
 
             var departmentMap = _mapper.Map<Department>(updatedDepartment);
 
@@ -126,9 +116,6 @@ namespace RequestManagementSystem.Controllers
             }
 
             var departmentToDelete = _departmentService.GetById(departmentId);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             if (!_departmentService.Delete(departmentToDelete))
             {
