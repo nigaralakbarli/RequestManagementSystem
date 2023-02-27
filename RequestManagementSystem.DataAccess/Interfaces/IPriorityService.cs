@@ -10,7 +10,7 @@ namespace RequestManagementSystem.DataAccess.Interfaces
     public interface IPriorityService
     {
         ICollection<Priority> GetAll();
-        ICollection<Request> GetRequestsByPriority(int priorityId);
+        //ICollection<Request> GetRequestsByPriority(int priorityId);
         Priority? GetById(int id);
         bool Create(Priority priority);
         bool Update(Priority priority);

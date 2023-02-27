@@ -41,10 +41,10 @@ namespace RequestManagementSystem.DataAccess.Services
             return _dbContext.RequestTypes.Where(p => p.Id == id).FirstOrDefault();
         }
 
-        public ICollection<Request> GetRequestsByRequestType(int requestTypeId)
-        {
-            return _dbContext.Requests.Where(r=> r.RequestTypeId== requestTypeId).ToList();
-        }
+        //public ICollection<Request> GetRequestsByRequestType(int requestTypeId)
+        //{
+        //    return _dbContext.Requests.Where(r=> r.RequestTypeId== requestTypeId).ToList();
+        //}
 
         public bool RequestTypeExists(int id)
         {

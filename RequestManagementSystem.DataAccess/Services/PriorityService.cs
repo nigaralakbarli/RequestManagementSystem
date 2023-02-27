@@ -43,7 +43,7 @@ namespace RequestManagementSystem.DataAccess.Services
 
         public ICollection<Request> GetRequestsByPriority(int priorityId)
         {
-            return _dbContext.Requests.Where(r=> r.PriorityId== priorityId).ToList();
+            return _dbContext.Requests.Where(r => r.PriorityId == priorityId).ToList();
         }
 
         public bool PriorityExists(int id)

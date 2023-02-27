@@ -10,7 +10,7 @@ namespace RequestManagementSystem.DataAccess.Interfaces
     public interface IRequestTypeService
     {
         ICollection<RequestType> GetAll();
-        ICollection<Request> GetRequestsByRequestType(int requestTypeId);
+        //ICollection<Request> GetRequestsByRequestType(int requestTypeId);
         RequestType? GetById(int id);
         bool Create(RequestType requestType);
         bool Update(RequestType requestType);
