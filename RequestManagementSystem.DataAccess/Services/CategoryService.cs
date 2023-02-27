@@ -51,5 +51,16 @@ namespace RequestManagementSystem.DataAccess.Services
         {
             return _dbContext.Categories.Any(c => c.Id == id);
         }
+
+        public ICollection<Request> GetRequestsByCategory(int categoryId)
+        {
+            return _dbContext.Requests.Where(r => r.CategoryId == categoryId).ToList();
+                           //.Include(r => r.Category)
+                           //.Include(r => r.Priority)
+                           //.Include(r => r.RequestType)
+                           //.Include(r => r.RequestStatus)
+                           //.Include(r => r.CreateUser)
+                           //.Include(r => r.ExecutorUser)
+        }
     }
 }

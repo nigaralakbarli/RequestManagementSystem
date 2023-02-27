@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
+using RequestManagementSystem.DataAccess.Services;
 using RequestManagementSystem.Dtos;
 using System.ComponentModel.DataAnnotations;
 
@@ -118,5 +119,18 @@ namespace RequestManagementSystem.Controllers
 
             return NoContent();
         }
+
+
+        [HttpGet("{requestStatusId}/requests")]
+        public IActionResult GetRequestsByCategory(int requestStatusId)
+        {
+            if (!_requestStatusService.RequestStatusExists(requestStatusId))
+                return NotFound();
+            var requests = _mapper.Map<List<RequestDto>>(
+                _requestStatusService.GetRequestsByRequestStatus(requestStatusId));
+
+            return Ok(requests);
+        }
     }
+
 }

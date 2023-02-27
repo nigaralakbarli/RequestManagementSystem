@@ -10,6 +10,7 @@ namespace RequestManagementSystem.DataAccess.Interfaces
     public interface ICategoryService
     {
         ICollection<Category> GetAll();
+        ICollection<Request> GetRequestsByCategory(int categoryId);
         Category? GetById(int id);
         bool Create(Category category);
         bool Update(Category category); 

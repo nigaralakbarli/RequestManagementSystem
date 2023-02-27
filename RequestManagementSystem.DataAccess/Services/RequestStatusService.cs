@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using RequestManagementSystem.Data.DataContext;
+﻿using RequestManagementSystem.Data.DataContext;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
 using System;
@@ -40,6 +39,11 @@ namespace RequestManagementSystem.DataAccess.Services
         public RequestStatus? GetById(int id)
         {
             return _dbContext.RequestStatuses.Where(p => p.Id == id).FirstOrDefault();
+        }
+
+        public ICollection<Request> GetRequestsByRequestStatus(int requestStatusId)
+        {
+            return _dbContext.Requests.Where(r=> r.RequestStatusId == requestStatusId).ToList();
         }
 
         public bool RequestStatusExists(int id)

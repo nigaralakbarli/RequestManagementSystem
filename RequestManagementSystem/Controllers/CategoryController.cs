@@ -118,5 +118,19 @@ namespace RequestManagementSystem.Controllers
 
             return NoContent();
         }
+
+
+        [HttpGet("{categoryId}/requests")]
+        public IActionResult GetRequestsByCategory(int categoryId)
+        {
+            if (!_categoryService.CategoryExists(categoryId))
+                return NotFound();
+
+            var requests = _mapper.Map<List<RequestDto>>(
+                _categoryService.GetRequestsByCategory(categoryId));
+
+            return Ok(requests);
+        }
     }
+
 }

@@ -125,5 +125,17 @@ namespace RequestManagementSystem.Controllers
             return NoContent();
         }
 
+
+        [HttpGet("{priorityId}/requests")]
+        public IActionResult GetRequestsByCategory(int priorityId)
+        {
+            if (!_priorityService.PriorityExists(priorityId))
+                return NotFound();
+
+            var requests = _mapper.Map<List<RequestDto>>(
+                _priorityService.GetRequestsByPriority(priorityId));
+
+            return Ok(requests);
+        }
     }
 }

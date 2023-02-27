@@ -35,6 +35,11 @@ namespace RequestManagementSystem.DataAccess.Services
             return _dbContext.Users.ToList();
         }
 
+        public ICollection<User> GetByDepartment(int departmentId)
+        {
+            throw new NotImplementedException();
+        }
+
         public User? GetById(int id)
         {
             return _dbContext.Users.Where(c => c.Id == id).FirstOrDefault();

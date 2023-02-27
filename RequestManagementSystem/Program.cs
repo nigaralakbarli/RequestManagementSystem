@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RequestManagementSystem.Data.DataContext;
+using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
 using RequestManagementSystem.DataAccess.Services;
 
@@ -19,6 +20,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IRequestStatusService, RequestStatusService>();
 builder.Services.AddScoped<IRequestTypeService, RequestTypeService>();
+builder.Services.AddScoped<IPriorityService, PriorityService>();
+
+
 
 
 
