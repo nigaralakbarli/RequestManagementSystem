@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
 using RequestManagementSystem.DataAccess.Services;
-using RequestManagementSystem.Dtos;
+using RequestManagementSystem.Dtos.Request;
+using RequestManagementSystem.Dtos.Response;
 
 namespace RequestManagementSystem.Controllers
 {
@@ -26,7 +27,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
         public IActionResult GetUsers()
         {
-            var users = _mapper.Map<List<UserDto>>(_userService.GetAll());
+            var users = _mapper.Map<List<UserResponseDto>>(_userService.GetAll());
             return Ok(users);
         }
 
@@ -39,7 +40,7 @@ namespace RequestManagementSystem.Controllers
             if (!_userService.UserExists(userId))
                 return NotFound();
 
-            var user = _mapper.Map<UserDto>(_userService.GetById(userId));
+            var user = _mapper.Map<UserResponseDto>(_userService.GetById(userId));
 
             return Ok(user);
         }
@@ -48,7 +49,7 @@ namespace RequestManagementSystem.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateUser([FromBody] UserDto userCreate)
+        public IActionResult CreateUser([FromBody] UserRequestDto userCreate)
         {
             if (userCreate == null)
                 return BadRequest(ModelState);
@@ -79,7 +80,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateUser(int userId, [FromBody] UserDto updatedUser)
+        public IActionResult UpdateUser(int userId, [FromBody] UserRequestDto updatedUser)
         {
             if (updatedUser == null)
                 return BadRequest(ModelState);

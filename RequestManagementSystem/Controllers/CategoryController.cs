@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
-using RequestManagementSystem.Dtos;
+using RequestManagementSystem.Dtos.Request;
+using RequestManagementSystem.Dtos.Response;
 using System.ComponentModel.DataAnnotations;
 
 namespace RequestManagementSystem.Controllers
@@ -25,7 +26,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Category>))]
         public IActionResult GetCategories()
         {
-            var categories = _mapper.Map<List<CategoryDto>>(_categoryService.GetAll());
+            var categories = _mapper.Map<List<CategoryResponseDto>>(_categoryService.GetAll());
             return Ok(categories);
         }
 
@@ -38,7 +39,7 @@ namespace RequestManagementSystem.Controllers
             if (!_categoryService.CategoryExists(categoryId))
                 return NotFound();
 
-            var category = _mapper.Map<CategoryDto>(_categoryService.GetById(categoryId));
+            var category = _mapper.Map<CategoryResponseDto>(_categoryService.GetById(categoryId));
 
             return Ok(category);
         }
@@ -47,7 +48,7 @@ namespace RequestManagementSystem.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateCategory([FromBody][Required] CategoryDto categoryCreate)
+        public IActionResult CreateCategory([FromBody][Required] CategoryRequestDto categoryCreate)
         {
             var category = _categoryService.GetAll()
                 .Where(c => c.Name.Trim().ToUpper() == categoryCreate.Name.TrimEnd().ToUpper())
@@ -75,7 +76,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateCategory(int categoryId, [FromBody] CategoryDto updatedCategory)
+        public IActionResult UpdateCategory(int categoryId, [FromBody] CategoryRequestDto updatedCategory)
         {
             if (updatedCategory == null)
                 return BadRequest(ModelState);
@@ -120,17 +121,18 @@ namespace RequestManagementSystem.Controllers
         }
 
 
-        [HttpGet("{categoryId}/requests")]
-        public IActionResult GetRequestsByCategory(int categoryId)
-        {
-            if (!_categoryService.CategoryExists(categoryId))
-                return NotFound();
+        //[HttpGet("{categoryId}/requests")]
+        //public IActionResult GetRequestsByCategory(int categoryId)
+        //{
+        //    if (!_categoryService.CategoryExists(categoryId))
+        //        return NotFound();
 
-            var requests = _mapper.Map<List<RequestDto>>(
-                _categoryService.GetRequestsByCategory(categoryId));
+        //    var requests = _mapper.Map<List<RequestDto>>(
+        //        _categoryService.GetRequestsByCategory(categoryId));
 
-            return Ok(requests);
-        }
+        //    return Ok(requests);
+        //}
+
     }
 
 }

@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
 using RequestManagementSystem.DataAccess.Services;
-using RequestManagementSystem.Dtos;
+using RequestManagementSystem.Dtos.Request;
+using RequestManagementSystem.Dtos.Response;
 using System.ComponentModel.DataAnnotations;
 
 namespace RequestManagementSystem.Controllers
@@ -26,7 +27,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<RequestStatus>))]
         public IActionResult GetRequestStatuses()
         {
-            var categories = _mapper.Map<List<RequestStatusDto>>(_requestStatusService.GetAll());
+            var categories = _mapper.Map<List<RequestStatusResponseDto>>(_requestStatusService.GetAll());
             return Ok(categories);
         }
 
@@ -39,7 +40,7 @@ namespace RequestManagementSystem.Controllers
             if (!_requestStatusService.RequestStatusExists(requestStatusId))
                 return NotFound();
 
-            var requestStatus = _mapper.Map<RequestStatusDto>(_requestStatusService.GetById(requestStatusId));
+            var requestStatus = _mapper.Map<RequestStatusResponseDto>(_requestStatusService.GetById(requestStatusId));
 
             return Ok(requestStatus);
         }
@@ -48,7 +49,7 @@ namespace RequestManagementSystem.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateRequestStatus([FromBody][Required] RequestStatusDto requestStatusCreate)
+        public IActionResult CreateRequestStatus([FromBody][Required] RequestStatusRequestDto requestStatusCreate)
         {
             var requestStatus = _requestStatusService.GetAll()
                 .Where(c => c.Name.Trim().ToUpper() == requestStatusCreate.Name.TrimEnd().ToUpper())
@@ -76,7 +77,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult RequestStatus(int requestStatusId, [FromBody] RequestStatusDto updatedRequestStatus)
+        public IActionResult RequestStatus(int requestStatusId, [FromBody] RequestStatusRequestDto updatedRequestStatus)
         {
             if (updatedRequestStatus == null)
                 return BadRequest(ModelState);
@@ -120,17 +121,6 @@ namespace RequestManagementSystem.Controllers
             return NoContent();
         }
 
-
-        [HttpGet("{requestStatusId}/requests")]
-        public IActionResult GetRequestsByCategory(int requestStatusId)
-        {
-            if (!_requestStatusService.RequestStatusExists(requestStatusId))
-                return NotFound();
-            var requests = _mapper.Map<List<RequestDto>>(
-                _requestStatusService.GetRequestsByRequestStatus(requestStatusId));
-
-            return Ok(requests);
-        }
     }
 
 }

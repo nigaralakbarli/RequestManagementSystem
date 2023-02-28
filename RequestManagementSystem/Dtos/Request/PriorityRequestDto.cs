@@ -1,6 +1,6 @@
-﻿namespace RequestManagementSystem.Dtos
+﻿namespace RequestManagementSystem.Dtos.Request
 {
-    public class PriorityDto
+    public class PriorityRequestDto
     {
         public int Id { get; set; }
         public string Level { get; set; }

@@ -1,6 +1,6 @@
-﻿namespace RequestManagementSystem.Dtos
+﻿namespace RequestManagementSystem.Dtos.Request
 {
-    public class DepartmentDto
+    public class DepartmentRequestDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

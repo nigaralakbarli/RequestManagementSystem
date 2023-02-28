@@ -54,13 +54,13 @@ namespace RequestManagementSystem.DataAccess.Services
 
         public ICollection<Request> GetRequestsByCategory(int categoryId)
         {
-            return _dbContext.Requests.Where(r => r.CategoryId == categoryId).ToList();
-                           //.Include(r => r.Category)
-                           //.Include(r => r.Priority)
-                           //.Include(r => r.RequestType)
-                           //.Include(r => r.RequestStatus)
-                           //.Include(r => r.CreateUser)
-                           //.Include(r => r.ExecutorUser)
+            return _dbContext.Requests.Where(r => r.CategoryId == categoryId)
+                           .Include(r => r.Category)
+                           .Include(r => r.Priority)
+                           .Include(r => r.RequestType)
+                           .Include(r => r.RequestStatus)
+                           .Include(r => r.CreateUser)
+                           .Include(r => r.ExecutorUser).ToList();
         }
     }
 }

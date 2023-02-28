@@ -1,4 +1,5 @@
-﻿using RequestManagementSystem.Data.DataContext;
+﻿using Microsoft.EntityFrameworkCore;
+using RequestManagementSystem.Data.DataContext;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
 using System;
@@ -32,17 +33,13 @@ namespace RequestManagementSystem.DataAccess.Services
 
         public ICollection<User> GetAll()
         {
-            return _dbContext.Users.ToList();
+            return _dbContext.Users.OrderBy(r => r.Id).Include(r => r.Department).ToList();
         }
 
-        public ICollection<User> GetByDepartment(int departmentId)
-        {
-            throw new NotImplementedException();
-        }
 
         public User? GetById(int id)
         {
-            return _dbContext.Users.Where(c => c.Id == id).FirstOrDefault();
+            return _dbContext.Users.Where(c => c.Id == id).Include(r => r.Department).FirstOrDefault();
         }
 
         public bool Update(User user)

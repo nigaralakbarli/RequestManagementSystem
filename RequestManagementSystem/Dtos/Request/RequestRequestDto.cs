@@ -1,8 +1,6 @@
-﻿using RequestManagementSystem.Data.Models;
-
-namespace RequestManagementSystem.Dtos
+﻿namespace RequestManagementSystem.Dtos.Request
 {
-    public class RequestDto
+    public class RequestRequestDto
     {
         public int Id { get; set; }
         public string Title { get; set; }

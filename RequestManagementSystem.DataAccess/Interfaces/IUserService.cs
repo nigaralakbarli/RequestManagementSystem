@@ -15,7 +15,5 @@ namespace RequestManagementSystem.DataAccess.Interfaces
         bool Update(User user);
         bool Delete(User user);
         bool UserExists(int id);
-
-        ICollection<User> GetByDepartment(int departmentId);
     }
 }

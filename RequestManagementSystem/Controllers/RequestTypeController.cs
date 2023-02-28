@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
 using RequestManagementSystem.DataAccess.Services;
-using RequestManagementSystem.Dtos;
+using RequestManagementSystem.Dtos.Request;
+using RequestManagementSystem.Dtos.Response;
 using System.ComponentModel.DataAnnotations;
 
 namespace RequestManagementSystem.Controllers
@@ -27,7 +28,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<RequestType>))]
         public IActionResult GetRequestTypes()
         {
-            var requestTypes = _mapper.Map<List<RequestTypeDto>>(_requestTypeService.GetAll());
+            var requestTypes = _mapper.Map<List<RequestTypeResponseDto>>(_requestTypeService.GetAll());
             return Ok(requestTypes);
         }
 
@@ -40,7 +41,7 @@ namespace RequestManagementSystem.Controllers
             if (!_requestTypeService.RequestTypeExists(requestTypeId))
                 return NotFound();
 
-            var requestType = _mapper.Map<RequestTypeDto>(_requestTypeService.GetById(requestTypeId));
+            var requestType = _mapper.Map<RequestTypeResponseDto>(_requestTypeService.GetById(requestTypeId));
 
             return Ok(requestType);
         }
@@ -49,7 +50,7 @@ namespace RequestManagementSystem.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateRequestType([FromBody][Required] RequestTypeDto requestTypeCreate)
+        public IActionResult CreateRequestType([FromBody][Required] RequestTypeRequestDto requestTypeCreate)
         {
             var requestType = _requestTypeService.GetAll()
                 .Where(c => c.Name.Trim().ToUpper() == requestTypeCreate.Name.TrimEnd().ToUpper())
@@ -77,7 +78,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateRequestType(int requestTypeId, [FromBody] RequestTypeDto updatedRequestType)
+        public IActionResult UpdateRequestType(int requestTypeId, [FromBody] RequestTypeRequestDto updatedRequestType)
         {
             if (updatedRequestType == null)
                 return BadRequest(ModelState);

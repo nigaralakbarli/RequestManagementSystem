@@ -33,12 +33,25 @@ namespace RequestManagementSystem.DataAccess.Services
 
         public ICollection<Request> GetAll()
         {
-            return _dbContext.Requests.OrderBy(p => p.Id).ToList();
+            return _dbContext.Requests.OrderBy(r => r.Id)
+                                    .Include(r => r.Priority)
+                                    .Include(r => r.Category)
+                                    .Include(r => r.RequestType)
+                                    .Include(r => r.RequestStatus)
+                                    .Include(r => r.CreateUser)
+                                    .Include(r => r.ExecutorUser)
+                                    .ToList();
         }
 
         public Request? GetById(int id)
         {
-            return _dbContext.Requests.Where(p => p.Id == id).FirstOrDefault();
+            return _dbContext.Requests.Where(p => p.Id == id)
+                                    .Include(r => r.Priority)
+                                    .Include(r => r.Category)
+                                    .Include(r => r.RequestType)
+                                    .Include(r => r.RequestStatus)
+                                    .Include(r => r.CreateUser)
+                                    .Include(r => r.ExecutorUser).FirstOrDefault();
         }
 
         public bool RequestExists(int id)

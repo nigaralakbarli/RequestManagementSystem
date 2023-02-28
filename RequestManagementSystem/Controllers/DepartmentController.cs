@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
 using RequestManagementSystem.DataAccess.Services;
-using RequestManagementSystem.Dtos;
+using RequestManagementSystem.Dtos.Request;
+using RequestManagementSystem.Dtos.Response;
 
 namespace RequestManagementSystem.Controllers
 {
@@ -25,7 +26,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Department>))]
         public IActionResult GetDepartments()
         {
-            var departments = _mapper.Map<List<DepartmentDto>>(_departmentService.GetAll());
+            var departments = _mapper.Map<List<DepartmentResponseDto>>(_departmentService.GetAll());
 
             return Ok(departments);
         }
@@ -39,7 +40,7 @@ namespace RequestManagementSystem.Controllers
             if (!_departmentService.DepartmentExists(departmentId))
                 return NotFound();
 
-            var department = _mapper.Map<DepartmentDto>(_departmentService.GetById(departmentId));
+            var department = _mapper.Map<DepartmentResponseDto>(_departmentService.GetById(departmentId));
 
             return Ok(department);
         }
@@ -48,7 +49,7 @@ namespace RequestManagementSystem.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateDepartment([FromBody] DepartmentDto departmentCreate)
+        public IActionResult CreateDepartment([FromBody] DepartmentRequestDto departmentCreate)
         {
 
             //new
@@ -81,7 +82,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateDepartment(int departmentId, [FromBody] DepartmentDto updatedDepartment)
+        public IActionResult UpdateDepartment(int departmentId, [FromBody] DepartmentRequestDto updatedDepartment)
         {
             if (updatedDepartment == null)
                 return BadRequest(ModelState);

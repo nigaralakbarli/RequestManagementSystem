@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
 using RequestManagementSystem.DataAccess.Services;
-using RequestManagementSystem.Dtos;
+using RequestManagementSystem.Dtos.Request;
+using RequestManagementSystem.Dtos.Response;
 using System.ComponentModel.DataAnnotations;
 
 namespace RequestManagementSystem.Controllers
@@ -26,7 +27,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Request>))]
         public IActionResult GetRequests()
         {
-            var requests = _mapper.Map<List<RequestDto>>(_requestService.GetAll());
+            var requests = _mapper.Map<List<RequestResponseDto>>(_requestService.GetAll());
             return Ok(requests);
         }
 
@@ -39,7 +40,7 @@ namespace RequestManagementSystem.Controllers
             if (!_requestService.RequestExists(requestId))
                 return NotFound();
 
-            var category = _mapper.Map<RequestDto>(_requestService.GetById(requestId));
+            var category = _mapper.Map<RequestResponseDto>(_requestService.GetById(requestId));
 
             return Ok(category);
         }
@@ -48,7 +49,7 @@ namespace RequestManagementSystem.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateRequest([FromBody][Required] RequestDto requestCreate)
+        public IActionResult CreateRequest([FromBody][Required] RequestRequestDto requestCreate)
         {
             var request = _requestService.GetAll()
                 .Where(c => c.Title.Trim().ToUpper() == requestCreate.Title.TrimEnd().ToUpper())
@@ -76,7 +77,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateRequest(int requestId, [FromBody] RequestDto updatedRequest)
+        public IActionResult UpdateRequest(int requestId, [FromBody] RequestRequestDto updatedRequest)
         {
             if (updatedRequest == null)
                 return BadRequest(ModelState);

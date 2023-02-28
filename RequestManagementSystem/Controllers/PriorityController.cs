@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
 using RequestManagementSystem.DataAccess.Services;
-using RequestManagementSystem.Dtos;
+using RequestManagementSystem.Dtos.Request;
+using RequestManagementSystem.Dtos.Response;
 
 namespace RequestManagementSystem.Controllers
 {
@@ -25,7 +26,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Priority>))]
         public IActionResult GetPriorities()
         {
-            var priorities = _mapper.Map<List<PriorityDto>>(_priorityService.GetAll());
+            var priorities = _mapper.Map<List<PriorityResponseDto>>(_priorityService.GetAll());
 
             return Ok(priorities);
         }
@@ -39,7 +40,7 @@ namespace RequestManagementSystem.Controllers
             if (!_priorityService.PriorityExists(priorityId))
                 return NotFound();
 
-            var priority = _mapper.Map<PriorityDto>(_priorityService.GetById(priorityId));
+            var priority = _mapper.Map<PriorityResponseDto>(_priorityService.GetById(priorityId));
 
             return Ok(priority);
         }
@@ -48,7 +49,7 @@ namespace RequestManagementSystem.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreatePriority([FromBody] PriorityDto priorityCreate)
+        public IActionResult CreatePriority([FromBody] PriorityRequestDto priorityCreate)
         {
 
             //new
@@ -81,7 +82,7 @@ namespace RequestManagementSystem.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdatePriority(int priorityId, [FromBody] PriorityDto updatedPriority)
+        public IActionResult UpdatePriority(int priorityId, [FromBody] PriorityRequestDto updatedPriority)
         {
             if (updatedPriority == null)
                 return BadRequest(ModelState);
