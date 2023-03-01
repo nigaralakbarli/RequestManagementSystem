@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RequestManagementSystem.Data.Models;
+using RequestManagementSystem.DataAccess.Models;
 using RequestManagementSystem.Dtos.Request;
 using RequestManagementSystem.Dtos.Response;
 
@@ -17,6 +18,9 @@ namespace RequestManagementSystem
 
             CreateMap<Priority, PriorityResponseDto>();
             CreateMap<PriorityRequestDto, Priority>();
+            CreateMap<ListRequest, RequestList>()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
+                .ReverseMap();
 
             CreateMap<Request, RequestResponseDto>()
             .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))

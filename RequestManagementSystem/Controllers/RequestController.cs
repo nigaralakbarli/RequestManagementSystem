@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
+using RequestManagementSystem.DataAccess.Models;
 using RequestManagementSystem.DataAccess.Services;
 using RequestManagementSystem.Dtos.Request;
 using RequestManagementSystem.Dtos.Response;
@@ -25,10 +26,12 @@ namespace RequestManagementSystem.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Request>))]
-        public IActionResult GetRequests()
+        public IActionResult GetRequests([FromQuery] RequestList requestList)
         {
-            var requests = _mapper.Map<List<RequestResponseDto>>(_requestService.GetAll());
-            return Ok(requests);
+            var requests = _requestService.GetList(_mapper.Map<ListRequest>(requestList));
+            //requests = _requestService.GetByPage(pageIndex, pageSize, requests);
+            var mapRequests = _mapper.Map<List<RequestResponseDto>>(requests);
+            return Ok(mapRequests);
         }
 
 
@@ -119,6 +122,18 @@ namespace RequestManagementSystem.Controllers
             }
 
             return NoContent();
+
         }
+
+        [HttpGet("[action]/{categoryName}")]
+        public IActionResult GetByCategory(string categoryName, int pageIndex=1, int pageSize=2)
+        {
+            var filteredRequest = _requestService.GetRequestsByCategory(categoryName);
+            filteredRequest = _requestService.GetByPage(pageIndex, pageSize, filteredRequest);
+            var mapRequest = _mapper.Map<List<RequestResponseDto>>(filteredRequest);
+            return Ok(mapRequest);
+        }
+
+
     }
 }
