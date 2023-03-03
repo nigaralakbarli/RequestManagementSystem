@@ -18,9 +18,7 @@ namespace RequestManagementSystem
 
             CreateMap<Priority, PriorityResponseDto>();
             CreateMap<PriorityRequestDto, Priority>();
-            CreateMap<ListRequest, RequestList>()
-                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
-                .ReverseMap();
+            CreateMap<ListRequest, RequestList>().ReverseMap();
 
             CreateMap<Request, RequestResponseDto>()
             .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))

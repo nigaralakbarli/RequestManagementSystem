@@ -32,7 +32,8 @@ namespace RequestManagementSystem.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("[action]")]
+        [Route("/filtered")]
+        [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Request>))]
         public IActionResult GetRequestsByFilters([FromQuery] RequestList requestList)
         {
@@ -42,20 +43,18 @@ namespace RequestManagementSystem.Controllers
         }
 
 
+        //[HttpGet("{requestId}")]
+        //[ProducesResponseType(200, Type = typeof(Request))]
+        //[ProducesResponseType(400)]
+        //public IActionResult GetRequest(int requestId) 
+        //{
+        //    if (!_requestService.RequestExists(requestId))
+        //        return NotFound();
 
-        [HttpGet("{requestId}")]
-        [ProducesResponseType(200, Type = typeof(Request))]
-        [ProducesResponseType(400)]
-        public IActionResult GetRequest(int requestId) 
-        {
-            if (!_requestService.RequestExists(requestId))
-                return NotFound();
+        //    var category = _mapper.Map<RequestResponseDto>(_requestService.GetById(requestId));
 
-            var category = _mapper.Map<RequestResponseDto>(_requestService.GetById(requestId));
-
-            return Ok(category);
-        }
-
+        //    return Ok(category);
+        //}
 
         [HttpPost]
         [ProducesResponseType(204)]
