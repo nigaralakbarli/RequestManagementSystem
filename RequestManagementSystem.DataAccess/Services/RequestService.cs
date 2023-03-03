@@ -31,13 +31,10 @@ namespace RequestManagementSystem.DataAccess.Services
             _dbContext.SaveChanges();
             return true;
         }
-        public ICollection<Request> GetByPage(int pageIndex, int pageSize, ICollection<Request> requests)
+
+        public ICollection<Request> GetAll(int pageIndex, int pageSize)
         {
-            return requests.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-        }
-        public ICollection<Request> GetAll()
-        {
-            return _dbContext.Requests.OrderBy(r => r.Id)
+            var requests =  _dbContext.Requests.OrderBy(r => r.Id)
                                     .Include(r => r.Priority)
                                     .Include(r => r.Category)
                                     .Include(r => r.RequestType)
@@ -45,7 +42,19 @@ namespace RequestManagementSystem.DataAccess.Services
                                     .Include(r => r.CreateUser)
                                     .Include(r => r.ExecutorUser)
                                     .ToList();
+            return requests.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+        }
 
+        public ICollection<Request> GetAll()
+        {
+            return  _dbContext.Requests.OrderBy(r => r.Id)
+                                    .Include(r => r.Priority)
+                                    .Include(r => r.Category)
+                                    .Include(r => r.RequestType)
+                                    .Include(r => r.RequestStatus)
+                                    .Include(r => r.CreateUser)
+                                    .Include(r => r.ExecutorUser)
+                                    .ToList();
         }
 
         public Request? GetById(int id)
@@ -57,85 +66,6 @@ namespace RequestManagementSystem.DataAccess.Services
                                     .Include(r => r.RequestStatus)
                                     .Include(r => r.CreateUser)
                                     .Include(r => r.ExecutorUser).FirstOrDefault();
-        }
-
-
-
-        public ICollection<Request> GetRequestsByCategory(string category)
-        {
-            return _dbContext.Requests.Where(r => r.Category.Name.Trim().ToLower().Contains(category.Trim().ToLower()))
-                                    .Include(r => r.Category)
-                                    .Include(r => r.Priority)
-                                    .Include(r => r.RequestType)
-                                    .Include(r => r.RequestStatus)
-                                    .Include(r => r.CreateUser)
-                                    .Include(r => r.ExecutorUser).ToList();
-        }
-
-        public ICollection<Request> GetRequestsByCreateUser(string user)
-        {
-            return _dbContext.Requests.Where(r => r.CreateUser.Name.Trim().ToLower().Contains(user.Trim().ToLower()))
-                                    .Include(r => r.Category)
-                                    .Include(r => r.Priority)
-                                    .Include(r => r.RequestType)
-                                    .Include(r => r.RequestStatus)
-                                    .Include(r => r.CreateUser)
-                                    .Include(r => r.ExecutorUser).ToList();
-        }
-
-        public ICollection<Request> GetRequestsByDate(DateTime date)
-        {
-            return _dbContext.Requests.Where(r => r.CreatedAt == date)
-                                    .Include(r => r.Category)
-                                    .Include(r => r.Priority)
-                                    .Include(r => r.RequestType)
-                                    .Include(r => r.RequestStatus)
-                                    .Include(r => r.CreateUser)
-                                    .Include(r => r.ExecutorUser).ToList();
-        }
-
-        public ICollection<Request> GetRequestsByDescription(string description)
-        {
-            return _dbContext.Requests.Where(r => r.Description.Trim().ToLower().Contains(description.Trim().ToLower()))
-                                    .Include(r => r.Category)
-                                    .Include(r => r.Priority)
-                                    .Include(r => r.RequestType)
-                                    .Include(r => r.RequestStatus)
-                                    .Include(r => r.CreateUser)
-                                    .Include(r => r.ExecutorUser).ToList();
-        }
-
-        public ICollection<Request> GetRequestsByExecuterUser(string user)
-        {
-            return _dbContext.Requests.Where(r => r.ExecutorUser.Name.Trim().ToLower().Contains(user.Trim().ToLower()))
-                                    .Include(r => r.Category)
-                                    .Include(r => r.Priority)
-                                    .Include(r => r.RequestType)
-                                    .Include(r => r.RequestStatus)
-                                    .Include(r => r.CreateUser)
-                                    .Include(r => r.ExecutorUser).ToList();
-        }
-
-        public ICollection<Request> GetRequestsByStatus(string status)
-        {
-            return _dbContext.Requests.Where(r => r.RequestStatus.Name.Trim().ToLower().Contains(status.Trim().ToLower()))
-                                    .Include(r => r.Category)
-                                    .Include(r => r.Priority)
-                                    .Include(r => r.RequestType)
-                                    .Include(r => r.RequestStatus)
-                                    .Include(r => r.CreateUser)
-                                    .Include(r => r.ExecutorUser).ToList();
-        }
-
-        public ICollection<Request> GetRequestsByTitle(string title)
-        {
-            return _dbContext.Requests.Where(r => r.Title.Trim().ToLower().Contains(title.Trim().ToLower()))
-                                    .Include(r => r.Category)
-                                    .Include(r => r.Priority)
-                                    .Include(r => r.RequestType)
-                                    .Include(r => r.RequestStatus)
-                                    .Include(r => r.CreateUser)
-                                    .Include(r => r.ExecutorUser).ToList();
         }
 
         public bool RequestExists(int id)
@@ -150,6 +80,11 @@ namespace RequestManagementSystem.DataAccess.Services
             return true;
         }
 
+        public static void Check()
+        {
+
+        }
+
         public List<Request> GetList(ListRequest listRequest)
         {
             var queryble = _dbContext.Requests
@@ -160,13 +95,50 @@ namespace RequestManagementSystem.DataAccess.Services
                                     .Include(r => r.RequestStatus)
                                     .Include(r => r.CreateUser)
                                     .Include(r => r.ExecutorUser).AsQueryable();
-            //if (!string.IsNullOrEmpty(listRequest.Id))
-            //{
-            //    queryble = queryble.Where(e => e.Id.ToString().Contains(listRequest.Id));
-            //}
 
-            queryble = queryble.Skip(1).Take(10);
-            return queryble.ToList();
+            if (!string.IsNullOrEmpty(listRequest.Id))
+            {
+                queryble = queryble.Where(e => e.Id.ToString().Contains(listRequest.Id));
+            }
+            
+            //queryble = !string.IsNullOrEmpty(listRequest.Id) ? queryble.Where(e => e.Id.ToString().Contains(listRequest.Id)) : queryble;
+
+            if (!string.IsNullOrEmpty(listRequest.Category))
+            {
+                queryble = queryble.Where(e => e.Category.Name.Trim().ToLower().Contains((listRequest.Category).Trim().ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(listRequest.Title))
+            {
+                queryble = queryble.Where(e => e.Title.Trim().ToLower().Contains((listRequest.Title).Trim().ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(listRequest.Description))
+            {
+                queryble = queryble.Where(e => e.Description.Trim().ToLower().Contains((listRequest.Description).Trim().ToLower()));
+            }
+
+            if (listRequest.CreatedAt.HasValue)
+            {
+                queryble = queryble.Where(e => e.CreatedAt == listRequest.CreatedAt);
+            }
+
+            if (!string.IsNullOrEmpty(listRequest.CreateUser))
+            {
+                queryble = queryble.Where(e => e.CreateUser.Name.Trim().ToLower().Contains((listRequest.CreateUser).Trim().ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(listRequest.ExecutorUser))
+            {
+                queryble = queryble.Where(e => e.ExecutorUser.Name.Trim().ToLower().Contains((listRequest.ExecutorUser).Trim().ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(listRequest.RequestStatus))
+            {
+                queryble = queryble.Where(e => e.RequestStatus.Name.Trim().ToLower().Contains((listRequest.RequestStatus).Trim().ToLower()));
+            }
+
+            return queryble.Skip((listRequest.pageIndex - 1) * listRequest.pageSize).Take(listRequest.pageSize).ToList(); ;
         }
     }
 }

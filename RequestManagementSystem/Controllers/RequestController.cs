@@ -26,13 +26,21 @@ namespace RequestManagementSystem.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Request>))]
-        public IActionResult GetRequests([FromQuery] RequestList requestList)
+        public IActionResult GetCategories(int pageIndex = 1, int pageSize = 2)
+        {
+            var categories = _mapper.Map<List<RequestResponseDto>>(_requestService.GetAll(pageIndex,pageSize));
+            return Ok(categories);
+        }
+
+        [HttpGet("[action]")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Request>))]
+        public IActionResult GetRequestsByFilters([FromQuery] RequestList requestList)
         {
             var requests = _requestService.GetList(_mapper.Map<ListRequest>(requestList));
-            //requests = _requestService.GetByPage(pageIndex, pageSize, requests);
             var mapRequests = _mapper.Map<List<RequestResponseDto>>(requests);
             return Ok(mapRequests);
         }
+
 
 
         [HttpGet("{requestId}")]
@@ -125,14 +133,14 @@ namespace RequestManagementSystem.Controllers
 
         }
 
-        [HttpGet("[action]/{categoryName}")]
-        public IActionResult GetByCategory(string categoryName, int pageIndex=1, int pageSize=2)
-        {
-            var filteredRequest = _requestService.GetRequestsByCategory(categoryName);
-            filteredRequest = _requestService.GetByPage(pageIndex, pageSize, filteredRequest);
-            var mapRequest = _mapper.Map<List<RequestResponseDto>>(filteredRequest);
-            return Ok(mapRequest);
-        }
+        //[HttpGet("[action]/{categoryName}")]
+        //public IActionResult GetByCategory(string categoryName, int pageIndex=1, int pageSize=2)
+        //{
+        //    var filteredRequest = _requestService.GetRequestsByCategory(categoryName);
+        //    filteredRequest = _requestService.GetByPage(pageIndex, pageSize, filteredRequest);
+        //    var mapRequest = _mapper.Map<List<RequestResponseDto>>(filteredRequest);
+        //    return Ok(mapRequest);
+        //}
 
 
     }
