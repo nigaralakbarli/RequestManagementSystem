@@ -20,8 +20,20 @@ namespace RequestManagementSystem.DataAccess.Services
         }
         public bool Create(Request request)
         {
+            request.RequestStatusId = 1; // set status to "open" //seed
+
+
             _dbContext.Add(request);
+            var action = new Data.Models.Action
+            {
+
+                RequestStatusId = request.RequestStatusId,
+                Date = DateTime.UtcNow
+            };
+
+            request.Actions.Add(action);
             _dbContext.SaveChanges();
+
             return true;
         }
 
@@ -148,7 +160,6 @@ namespace RequestManagementSystem.DataAccess.Services
                     { "Category", (query, value) => query.Where(e => e.Category.Name.Trim().ToLower().Contains(value.Trim().ToLower())) },
                     { "Title", (query, value) => query.Where(e => e.Title.Trim().ToLower().Contains(value.Trim().ToLower())) },
                     { "Description", (query, value) => query.Where(e => e.Description.Trim().ToLower().Contains(value.Trim().ToLower())) },
-                    { "CreatedAt", (query, value) => query.Where(e => e.CreatedAt == DateTime.Parse(value)) },
                     { "CreateUser", (query, value) => query.Where(e => e.CreateUser.Name.Trim().ToLower().Contains(value.Trim().ToLower())) },
                     { "ExecutorUser", (query, value) => query.Where(e => e.ExecutorUser.Name.Trim().ToLower().Contains(value.Trim().ToLower())) },
                     { "RequestStatus", (query, value) => query.Where(e => e.RequestStatus.Name.Trim().ToLower().Contains(value.Trim().ToLower())) },
@@ -168,6 +179,31 @@ namespace RequestManagementSystem.DataAccess.Services
             return queryable.Skip((listRequest.pageIndex - 1) * listRequest.pageSize)
                             .Take(listRequest.pageSize)
                             .ToList();
+        }
+
+        public bool UpdateRequestStatus(int requestId, int newStatusId)
+        {
+
+            var request = _dbContext.Requests.Find(requestId);
+            if (request == null)
+            {
+                throw new ArgumentException("Invalid request ID");
+
+            }
+
+            request.RequestStatusId = newStatusId;
+
+            var newAction = new Data.Models.Action
+            {
+                RequestId = requestId,
+                RequestStatusId = newStatusId,
+                Date = DateTime.UtcNow
+            };
+
+            request.Actions.Add(newAction);
+
+            _dbContext.SaveChanges();
+            return true;
         }
     }
 }

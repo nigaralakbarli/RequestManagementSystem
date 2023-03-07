@@ -18,5 +18,8 @@ namespace RequestManagementSystem.DataAccess.Interfaces
         bool Update(Request request);
         bool Delete(Request request);
         bool RequestExists(int id);
+        bool UpdateRequestStatus(int requestId, int newStatusId);
+
     }
 }
+

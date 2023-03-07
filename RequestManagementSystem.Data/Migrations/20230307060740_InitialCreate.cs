@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace RequestManagementSystem.Data.Migrations
 {
     /// <inheritdoc />
@@ -111,9 +113,7 @@ namespace RequestManagementSystem.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    FileUpload = table.Column<byte[]>(type: "bytea", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FileUpload = table.Column<string>(type: "text", nullable: false),
                     CreateUserId = table.Column<int>(type: "integer", nullable: false),
                     ExecutorUserId = table.Column<int>(type: "integer", nullable: false),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
@@ -162,6 +162,116 @@ namespace RequestManagementSystem.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Action",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    RequestId = table.Column<int>(type: "integer", nullable: false),
+                    RequestStatusId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Action", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Action_RequestStatuses_RequestStatusId",
+                        column: x => x.RequestStatusId,
+                        principalTable: "RequestStatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Action_Requests_RequestId",
+                        column: x => x.RequestId,
+                        principalTable: "Requests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "3E - AGIS" },
+                    { 2, "3E - dəstək" },
+                    { 3, "3rd Party" },
+                    { 4, "abc web site" },
+                    { 5, "AGIS - Debitor" },
+                    { 6, "AD SOCAR Romania" },
+                    { 7, "Agis - Proqram təminatı" },
+                    { 8, "ailem.socar.az" },
+                    { 9, "ant.socar.az" },
+                    { 10, "ASAN web service" },
+                    { 11, "Azeriqaz sms" },
+                    { 12, "azkob.az" },
+                    { 13, "Call Center" },
+                    { 14, "CIC web site" },
+                    { 15, "CVS web site" },
+                    { 16, "AD SOCAR Romania" },
+                    { 17, "ailem.socar.az" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Departments",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Information Technologies" },
+                    { 2, "Human Resources" },
+                    { 3, "Data Analysis" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Priorities",
+                columns: new[] { "Id", "Level" },
+                values: new object[,]
+                {
+                    { 1, "Low" },
+                    { 2, "Medium" },
+                    { 3, "High" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RequestStatuses",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Open" },
+                    { 2, "In Execution" },
+                    { 3, "Rejected" },
+                    { 4, "Waiting" },
+                    { 5, "Approved" },
+                    { 6, "Close" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RequestTypes",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "APP Change" },
+                    { 2, "APP Issue" },
+                    { 3, "APP New Requirement" },
+                    { 4, "Change the Report" },
+                    { 5, "Crate Custom Report" },
+                    { 6, "Create New Rrport" },
+                    { 7, "Incident" },
+                    { 8, "Master Data Change" },
+                    { 9, "Service Request" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Action_RequestId",
+                table: "Action",
+                column: "RequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Action_RequestStatusId",
+                table: "Action",
+                column: "RequestStatusId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Requests_CategoryId",
                 table: "Requests",
@@ -201,6 +311,9 @@ namespace RequestManagementSystem.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Action");
+
             migrationBuilder.DropTable(
                 name: "Requests");
 

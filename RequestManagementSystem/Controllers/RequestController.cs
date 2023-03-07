@@ -110,6 +110,28 @@ namespace RequestManagementSystem.Controllers
         }
 
 
+        [Route("/ChangeStatus")]
+        [HttpPut]
+        public IActionResult ChangeStatus([FromQuery] ActionRequestDto actionRequest)
+        {
+            if (actionRequest == null)
+                return BadRequest(ModelState);
+
+            if (!_requestService.RequestExists(actionRequest.RequestId))
+                return NotFound();
+
+            var requestMap = _mapper.Map<Request>(actionRequest);
+
+            if (!_requestService.UpdateRequestStatus(actionRequest.RequestId, actionRequest.RequestStatusId))
+            {
+                ModelState.AddModelError("", "Something went wrong updating request status");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+
         [HttpDelete("{requestId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]

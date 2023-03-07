@@ -14,9 +14,6 @@ namespace RequestManagementSystem.Data.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string FileUpload { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-
         public User CreateUser { get; set; }
         public int CreateUserId { get; set; }
         public User ExecutorUser { get; set; }
@@ -29,5 +26,9 @@ namespace RequestManagementSystem.Data.Models
         public int RequestStatusId { get; set; }
         public Priority Priority { get; set; } 
         public int PriorityId { get; set; }
+
+
+        public ICollection<Action> Actions { get; set; }
+
     }
 }

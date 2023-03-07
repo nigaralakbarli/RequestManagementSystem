@@ -12,7 +12,7 @@ using RequestManagementSystem.Data.DataContext;
 namespace RequestManagementSystem.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230223080957_InitialCreate")]
+    [Migration("20230307060740_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,6 +24,32 @@ namespace RequestManagementSystem.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("RequestManagementSystem.Data.Models.Action", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RequestStatusId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestId");
+
+                    b.HasIndex("RequestStatusId");
+
+                    b.ToTable("Action");
+                });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.Category", b =>
                 {
@@ -40,6 +66,93 @@ namespace RequestManagementSystem.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "3E - AGIS"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "3E - dəstək"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "3rd Party"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "abc web site"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "AGIS - Debitor"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "AD SOCAR Romania"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Agis - Proqram təminatı"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "ailem.socar.az"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "ant.socar.az"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "ASAN web service"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Azeriqaz sms"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "azkob.az"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Call Center"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "CIC web site"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "CVS web site"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "AD SOCAR Romania"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "ailem.socar.az"
+                        });
                 });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.Department", b =>
@@ -57,6 +170,23 @@ namespace RequestManagementSystem.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Information Technologies"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Human Resources"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Data Analysis"
+                        });
                 });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.Priority", b =>
@@ -74,6 +204,23 @@ namespace RequestManagementSystem.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Priorities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Level = "Low"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Level = "Medium"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Level = "High"
+                        });
                 });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.Request", b =>
@@ -90,9 +237,6 @@ namespace RequestManagementSystem.Data.Migrations
                     b.Property<int>("CreateUserId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -100,9 +244,9 @@ namespace RequestManagementSystem.Data.Migrations
                     b.Property<int>("ExecutorUserId")
                         .HasColumnType("integer");
 
-                    b.Property<byte[]>("FileUpload")
+                    b.Property<string>("FileUpload")
                         .IsRequired()
-                        .HasColumnType("bytea");
+                        .HasColumnType("text");
 
                     b.Property<int>("PriorityId")
                         .HasColumnType("integer");
@@ -116,9 +260,6 @@ namespace RequestManagementSystem.Data.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -152,6 +293,38 @@ namespace RequestManagementSystem.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RequestStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Open"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "In Execution"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Rejected"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Waiting"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Approved"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Close"
+                        });
                 });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.RequestType", b =>
@@ -169,6 +342,53 @@ namespace RequestManagementSystem.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RequestTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "APP Change"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "APP Issue"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "APP New Requirement"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Change the Report"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Crate Custom Report"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Create New Rrport"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Incident"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Master Data Change"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Service Request"
+                        });
                 });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.User", b =>
@@ -214,6 +434,25 @@ namespace RequestManagementSystem.Data.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("RequestManagementSystem.Data.Models.Action", b =>
+                {
+                    b.HasOne("RequestManagementSystem.Data.Models.Request", "Request")
+                        .WithMany("Actions")
+                        .HasForeignKey("RequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RequestManagementSystem.Data.Models.RequestStatus", "RequestStatus")
+                        .WithMany("Actions")
+                        .HasForeignKey("RequestStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Request");
+
+                    b.Navigation("RequestStatus");
                 });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.Request", b =>
@@ -293,8 +532,15 @@ namespace RequestManagementSystem.Data.Migrations
                     b.Navigation("Requests");
                 });
 
+            modelBuilder.Entity("RequestManagementSystem.Data.Models.Request", b =>
+                {
+                    b.Navigation("Actions");
+                });
+
             modelBuilder.Entity("RequestManagementSystem.Data.Models.RequestStatus", b =>
                 {
+                    b.Navigation("Actions");
+
                     b.Navigation("Requests");
                 });
 
