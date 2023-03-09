@@ -16,6 +16,7 @@ namespace RequestManagementSystem.Data.Models
         public string Image { get; set; }   
         public bool AllowNotification { get; set; }
         public string Position { get; set; }
+        public string Role { get; set; }
 
         //public ICollection<Request> Requests { get; set; }
         public ICollection<Request> CreatedRequests { get; set; }

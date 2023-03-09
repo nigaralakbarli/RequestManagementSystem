@@ -87,6 +87,10 @@ namespace RequestManagementSystem.Data.DataContext
                 new Category { Id = 16, Name = "AD SOCAR Romania" },
                 new Category { Id = 17, Name = "ailem.socar.az" }
                 );
+
+            modelBuilder.Entity<User>().HasData(
+                new User { Id = 1, Name = "Nigar", Password = "nigar123", InternalNumber = "123456", ContactNumber = "+995 551234567", AllowNotification = true, Role = "Admin", Image = "nigar's image", DepartmentId = 1, Position = "meslehetci" }
+                ) ;
         }
     }
 }

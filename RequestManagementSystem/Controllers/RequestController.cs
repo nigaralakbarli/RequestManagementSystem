@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
@@ -8,6 +9,7 @@ using RequestManagementSystem.DataAccess.Services;
 using RequestManagementSystem.Dtos.Request;
 using RequestManagementSystem.Dtos.Response;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace RequestManagementSystem.Controllers
 {
@@ -24,13 +26,16 @@ namespace RequestManagementSystem.Controllers
             _mapper = mapper;
         }
 
+
+        
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Request>))]
-        public IActionResult GetCategories(int pageIndex = 1, int pageSize = 2)
+        public IActionResult GetRequests(int pageIndex = 1, int pageSize = 2)
         {
             var categories = _mapper.Map<List<RequestResponseDto>>(_requestService.GetAll(pageIndex,pageSize));
             return Ok(categories);
         }
+        
 
         [Route("/filtered")]
         [HttpGet]

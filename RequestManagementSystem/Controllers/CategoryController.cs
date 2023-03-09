@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
@@ -6,6 +7,7 @@ using RequestManagementSystem.DataAccess.Interfaces;
 using RequestManagementSystem.Dtos.Request;
 using RequestManagementSystem.Dtos.Response;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace RequestManagementSystem.Controllers
 {
@@ -22,6 +24,8 @@ namespace RequestManagementSystem.Controllers
             _mapper = mapper;
         }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Category>))]
         public IActionResult GetCategories()
@@ -30,7 +34,7 @@ namespace RequestManagementSystem.Controllers
             return Ok(categories);
         }
 
-
+        [Authorize(Roles = "User")]
         [HttpGet("{categoryId}")]
         [ProducesResponseType(200, Type = typeof(Category))]
         [ProducesResponseType(400)]

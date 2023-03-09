@@ -12,7 +12,7 @@ using RequestManagementSystem.Data.DataContext;
 namespace RequestManagementSystem.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230307060740_InitialCreate")]
+    [Migration("20230309053820_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -429,11 +429,30 @@ namespace RequestManagementSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AllowNotification = true,
+                            ContactNumber = "+995 551234567",
+                            DepartmentId = 1,
+                            Image = "nigar's image",
+                            InternalNumber = "123456",
+                            Name = "Nigar",
+                            Password = "nigar123",
+                            Position = "meslehetci",
+                            Role = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.Action", b =>

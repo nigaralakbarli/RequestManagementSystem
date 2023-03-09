@@ -28,7 +28,8 @@ namespace RequestManagementSystem.Data.Models
         public int PriorityId { get; set; }
 
 
-        public ICollection<Action> Actions { get; set; }
+        public ICollection<Action> Actions { get; set; } = new List<Action>();
+
 
     }
 }

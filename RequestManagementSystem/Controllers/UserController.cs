@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RequestManagementSystem.Data.Models;
@@ -6,6 +7,8 @@ using RequestManagementSystem.DataAccess.Interfaces;
 using RequestManagementSystem.DataAccess.Services;
 using RequestManagementSystem.Dtos.Request;
 using RequestManagementSystem.Dtos.Response;
+using System.Data;
+using System.Security.Claims;
 
 namespace RequestManagementSystem.Controllers
 {
@@ -15,6 +18,7 @@ namespace RequestManagementSystem.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        
 
         public UserController(IUserService userService, IMapper mapper)
         {
@@ -31,6 +35,14 @@ namespace RequestManagementSystem.Controllers
             return Ok(users);
         }
 
+        [Route("current")]
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
+        public IActionResult GetCurrent()
+        {
+            var users = _mapper.Map<UserResponseDto>(_userService.GetCurrentUser());
+            return Ok(users);
+        }
 
         [HttpGet("{userId}")]
         [ProducesResponseType(200, Type = typeof(User))]
@@ -46,6 +58,7 @@ namespace RequestManagementSystem.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -123,5 +136,8 @@ namespace RequestManagementSystem.Controllers
 
             return NoContent();
         }
+
+
+
     }
 }

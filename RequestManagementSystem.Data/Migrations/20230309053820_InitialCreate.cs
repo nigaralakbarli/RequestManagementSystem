@@ -92,6 +92,7 @@ namespace RequestManagementSystem.Data.Migrations
                     Image = table.Column<string>(type: "text", nullable: false),
                     AllowNotification = table.Column<bool>(type: "boolean", nullable: false),
                     Position = table.Column<string>(type: "text", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: false),
                     DepartmentId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -261,6 +262,11 @@ namespace RequestManagementSystem.Data.Migrations
                     { 8, "Master Data Change" },
                     { 9, "Service Request" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "AllowNotification", "ContactNumber", "DepartmentId", "Image", "InternalNumber", "Name", "Password", "Position", "Role" },
+                values: new object[] { 1, true, "+995 551234567", 1, "nigar's image", "123456", "Nigar", "nigar123", "meslehetci", "Admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Action_RequestId",

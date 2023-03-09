@@ -11,5 +11,6 @@
         public bool AllowNotification { get; set; }
         public string Position { get; set; }
         public int DepartmentId { get; set; }
+        public string Role { get; set; }
     }
 }

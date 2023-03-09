@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using RequestManagementSystem.Data.DataContext;
 using RequestManagementSystem.Data.Models;
 using RequestManagementSystem.DataAccess.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,9 +15,12 @@ namespace RequestManagementSystem.DataAccess.Services
     public class UserService : IUserService
     {
         private readonly AppDbContext _dbContext;
-        public UserService(AppDbContext dbContext)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public UserService(AppDbContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
+            _httpContextAccessor = httpContextAccessor;
         }
         public bool Create(User user)
         {
@@ -52,6 +57,12 @@ namespace RequestManagementSystem.DataAccess.Services
         public bool UserExists(int id)
         {
             return _dbContext.Users.Any(c => c.Id == id);
+        }
+
+        public User GetCurrentUser()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _dbContext.Users.Include(r => r.Department).FirstOrDefault(o => o.Name.ToLower() == userId.ToLower());
         }
     }
 }

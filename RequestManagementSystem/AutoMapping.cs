@@ -16,6 +16,9 @@ namespace RequestManagementSystem
             CreateMap<Department, DepartmentResponseDto>();
             CreateMap<DepartmentRequestDto, Department>();
 
+            CreateMap<ActionRequestDto, Request>();
+
+
             CreateMap<Priority, PriorityResponseDto>();
             CreateMap<PriorityRequestDto, Priority>();
             CreateMap<ListRequest, RequestList>().ReverseMap();
