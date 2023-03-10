@@ -14,5 +14,6 @@ namespace RequestManagementSystem.Dtos.Response
         public string Priority { get; set; }
         public string RequestStatus { get; set; }
         public string RequestType { get; set; }
+
     }
 }

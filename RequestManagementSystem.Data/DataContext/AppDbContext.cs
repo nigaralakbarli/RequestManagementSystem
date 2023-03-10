@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RequestManagementSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,9 @@ namespace RequestManagementSystem.Data.DataContext
         public DbSet<RequestStatus> RequestStatuses { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<RequestType> RequestTypes { get; set; }
+        public DbSet<Models.Action> Actions { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

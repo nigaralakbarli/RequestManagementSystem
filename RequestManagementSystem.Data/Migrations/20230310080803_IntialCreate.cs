@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace RequestManagementSystem.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class IntialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,6 +54,19 @@ namespace RequestManagementSystem.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Token = table.Column<string>(type: "text", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Expires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Token);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RequestStatuses",
                 columns: table => new
                 {
@@ -93,6 +106,7 @@ namespace RequestManagementSystem.Data.Migrations
                     AllowNotification = table.Column<bool>(type: "boolean", nullable: false),
                     Position = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<string>(type: "text", nullable: false),
+                    RefreshTokenToken = table.Column<string>(type: "text", nullable: true),
                     DepartmentId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -104,6 +118,11 @@ namespace RequestManagementSystem.Data.Migrations
                         principalTable: "Departments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_RefreshTokens_RefreshTokenToken",
+                        column: x => x.RefreshTokenToken,
+                        principalTable: "RefreshTokens",
+                        principalColumn: "Token");
                 });
 
             migrationBuilder.CreateTable(
@@ -164,7 +183,7 @@ namespace RequestManagementSystem.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Action",
+                name: "Actions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -175,15 +194,15 @@ namespace RequestManagementSystem.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Action", x => x.Id);
+                    table.PrimaryKey("PK_Actions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Action_RequestStatuses_RequestStatusId",
+                        name: "FK_Actions_RequestStatuses_RequestStatusId",
                         column: x => x.RequestStatusId,
                         principalTable: "RequestStatuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Action_Requests_RequestId",
+                        name: "FK_Actions_Requests_RequestId",
                         column: x => x.RequestId,
                         principalTable: "Requests",
                         principalColumn: "Id",
@@ -265,17 +284,17 @@ namespace RequestManagementSystem.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AllowNotification", "ContactNumber", "DepartmentId", "Image", "InternalNumber", "Name", "Password", "Position", "Role" },
-                values: new object[] { 1, true, "+995 551234567", 1, "nigar's image", "123456", "Nigar", "nigar123", "meslehetci", "Admin" });
+                columns: new[] { "Id", "AllowNotification", "ContactNumber", "DepartmentId", "Image", "InternalNumber", "Name", "Password", "Position", "RefreshTokenToken", "Role" },
+                values: new object[] { 1, true, "+995 551234567", 1, "nigar's image", "123456", "Nigar", "nigar123", "meslehetci", null, "Admin" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Action_RequestId",
-                table: "Action",
+                name: "IX_Actions_RequestId",
+                table: "Actions",
                 column: "RequestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Action_RequestStatusId",
-                table: "Action",
+                name: "IX_Actions_RequestStatusId",
+                table: "Actions",
                 column: "RequestStatusId");
 
             migrationBuilder.CreateIndex(
@@ -312,13 +331,18 @@ namespace RequestManagementSystem.Data.Migrations
                 name: "IX_Users_DepartmentId",
                 table: "Users",
                 column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_RefreshTokenToken",
+                table: "Users",
+                column: "RefreshTokenToken");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Action");
+                name: "Actions");
 
             migrationBuilder.DropTable(
                 name: "Requests");
@@ -340,6 +364,9 @@ namespace RequestManagementSystem.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Departments");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
         }
     }
 }

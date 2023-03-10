@@ -18,6 +18,9 @@ namespace RequestManagementSystem.Data.Models
         public string Position { get; set; }
         public string Role { get; set; }
 
+        public RefreshToken RefreshToken { get; set; }  
+
+
         //public ICollection<Request> Requests { get; set; }
         public ICollection<Request> CreatedRequests { get; set; }
         public ICollection<Request> ExecutedRequests { get; set; }

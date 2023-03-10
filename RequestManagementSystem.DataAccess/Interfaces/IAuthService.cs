@@ -11,6 +11,8 @@ namespace RequestManagementSystem.DataAccess.Interfaces
     public interface IAuthService
     {
         string Generate(User user);
+        public RefreshToken GenerateRefreshToken(User user);
+        public User GetCurrentUser();
         User Authenticate(UserLogin userLogin);
     }
 }

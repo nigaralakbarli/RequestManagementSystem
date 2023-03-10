@@ -15,12 +15,10 @@ namespace RequestManagementSystem.DataAccess.Services
     public class UserService : IUserService
     {
         private readonly AppDbContext _dbContext;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public UserService(AppDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+       
+        public UserService(AppDbContext dbContext)
         {
             _dbContext = dbContext;
-            _httpContextAccessor = httpContextAccessor;
         }
         public bool Create(User user)
         {
@@ -59,10 +57,5 @@ namespace RequestManagementSystem.DataAccess.Services
             return _dbContext.Users.Any(c => c.Id == id);
         }
 
-        public User GetCurrentUser()
-        {
-            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return _dbContext.Users.Include(r => r.Department).FirstOrDefault(o => o.Name.ToLower() == userId.ToLower());
-        }
     }
 }

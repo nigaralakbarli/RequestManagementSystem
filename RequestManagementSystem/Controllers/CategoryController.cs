@@ -34,6 +34,7 @@ namespace RequestManagementSystem.Controllers
             return Ok(categories);
         }
 
+
         [Authorize(Roles = "User")]
         [HttpGet("{categoryId}")]
         [ProducesResponseType(200, Type = typeof(Category))]
@@ -124,18 +125,6 @@ namespace RequestManagementSystem.Controllers
             return NoContent();
         }
 
-
-        //[HttpGet("{categoryId}/requests")]
-        //public IActionResult GetRequestsByCategory(int categoryId)
-        //{
-        //    if (!_categoryService.CategoryExists(categoryId))
-        //        return NotFound();
-
-        //    var requests = _mapper.Map<List<RequestDto>>(
-        //        _categoryService.GetRequestsByCategory(categoryId));
-
-        //    return Ok(requests);
-        //}
 
     }
 

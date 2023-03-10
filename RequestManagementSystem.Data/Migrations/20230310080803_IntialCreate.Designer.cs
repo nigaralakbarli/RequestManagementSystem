@@ -12,8 +12,8 @@ using RequestManagementSystem.Data.DataContext;
 namespace RequestManagementSystem.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230309053820_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230310080803_IntialCreate")]
+    partial class IntialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,7 @@ namespace RequestManagementSystem.Data.Migrations
 
                     b.HasIndex("RequestStatusId");
 
-                    b.ToTable("Action");
+                    b.ToTable("Actions");
                 });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.Category", b =>
@@ -221,6 +221,22 @@ namespace RequestManagementSystem.Data.Migrations
                             Id = 3,
                             Level = "High"
                         });
+                });
+
+            modelBuilder.Entity("RequestManagementSystem.Data.Models.RefreshToken", b =>
+                {
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Token");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.Request", b =>
@@ -429,6 +445,9 @@ namespace RequestManagementSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("RefreshTokenToken")
+                        .HasColumnType("text");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
@@ -436,6 +455,8 @@ namespace RequestManagementSystem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("RefreshTokenToken");
 
                     b.ToTable("Users");
 
@@ -533,7 +554,13 @@ namespace RequestManagementSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RequestManagementSystem.Data.Models.RefreshToken", "RefreshToken")
+                        .WithMany()
+                        .HasForeignKey("RefreshTokenToken");
+
                     b.Navigation("Department");
+
+                    b.Navigation("RefreshToken");
                 });
 
             modelBuilder.Entity("RequestManagementSystem.Data.Models.Category", b =>

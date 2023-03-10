@@ -10,6 +10,7 @@ using RequestManagementSystem.Dtos.Request;
 using RequestManagementSystem.Dtos.Response;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Security.Claims;
 
 namespace RequestManagementSystem.Controllers
 {
@@ -19,15 +20,18 @@ namespace RequestManagementSystem.Controllers
     {
         private readonly IRequestService _requestService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RequestController(IRequestService requestService, IMapper mapper)
+
+        public RequestController(IRequestService requestService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _requestService = requestService;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
-        
+
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Request>))]
         public IActionResult GetRequests(int pageIndex = 1, int pageSize = 2)
@@ -75,7 +79,7 @@ namespace RequestManagementSystem.Controllers
                 ModelState.AddModelError("", "Request already exists");
                 return StatusCode(422, ModelState);
             }
-
+            requestCreate.CreateUserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var requestMap = _mapper.Map<Request>(requestCreate);
 
             if (!_requestService.Create(requestMap))
@@ -168,6 +172,10 @@ namespace RequestManagementSystem.Controllers
         //    return Ok(mapRequest);
         //}
 
-
+        //public string GetCurrentUser()
+        //{
+        //    var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        //    return userId;
+        //}
     }
 }

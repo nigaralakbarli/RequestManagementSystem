@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RequestManagementSystem.Data.DataContext;
@@ -10,6 +12,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,11 +22,14 @@ namespace RequestManagementSystem.DataAccess.Services
     {
         private readonly AppDbContext _dbContext;
         private readonly IConfiguration _config;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(AppDbContext dbContext, IConfiguration config)
+
+        public AuthService(AppDbContext dbContext, IConfiguration config, IHttpContextAccessor httpContextAccessor)
         {
             _config = config;
             _dbContext = dbContext;
+            _httpContextAccessor = httpContextAccessor;
         }
         public User Authenticate(UserLogin userLogin)
         {
@@ -44,7 +50,8 @@ namespace RequestManagementSystem.DataAccess.Services
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Name),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Role, user.Role)
             };
 
@@ -57,6 +64,28 @@ namespace RequestManagementSystem.DataAccess.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        public User GetCurrentUser()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _dbContext.Users.Include(r => r.Department).Include(r => r.RefreshToken).FirstOrDefault(o => o.Id.ToString().ToLower() == userId.ToLower());
+        }
 
+
+
+        public RefreshToken GenerateRefreshToken(User user)
+        {
+            var refreshToken = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                Expires = DateTime.UtcNow.AddDays(7),
+                Created = DateTime.UtcNow
+            };
+  
+            user.RefreshToken = refreshToken;
+            _dbContext.SaveChanges();
+
+            return refreshToken;
+        }
     }
 }
+

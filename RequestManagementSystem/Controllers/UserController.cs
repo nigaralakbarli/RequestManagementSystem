@@ -35,14 +35,14 @@ namespace RequestManagementSystem.Controllers
             return Ok(users);
         }
 
-        [Route("current")]
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
-        public IActionResult GetCurrent()
-        {
-            var users = _mapper.Map<UserResponseDto>(_userService.GetCurrentUser());
-            return Ok(users);
-        }
+        //[Route("current")]
+        //[HttpGet]
+        //[ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
+        //public IActionResult GetCurrent()
+        //{
+        //    var users = _mapper.Map<UserResponseDto>(_userService.GetCurrentUser());
+        //    return Ok(users);
+        //}
 
         [HttpGet("{userId}")]
         [ProducesResponseType(200, Type = typeof(User))]
